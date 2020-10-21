@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">uidReader</string>
+    <string name="pl.com.edps.basmoc.button.getGPSco">Get GPS co</string>
+    <string name="pl.com.edps.basmoc.button.getNFCuid">Get NFC UID</string>
+    <string name="pl.com.edps.basmoc.button.getPhoto">Get photo</string>
+    <string name="pl.com.edps.basmoc.info.points">...</string>
+    <string name="pl.com.edps.basmoc.info.waitingForInput">Waiting for input...</string>
+    <string name="pl.com.edps.basmoc.info.waitingForData">Waiting for data...</string>
+    <string name="pl.com.edps.basmoc.info.noGPSpriv">GPS: permission denied!</string>
+    <string name="pl.com.edps.basmoc.info.noNFCpriv">NFC: permission denied!</string>
+    <string name="pl.com.edps.basmoc.info.noCAMpriv">Camera: permission denied!</string>
+    <string name="pl.com.edps.basmoc.butt.openUART">Open UART</string>
+</resources>
