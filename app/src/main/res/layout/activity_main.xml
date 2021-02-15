@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/photoQuickButton" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/photoButton"
-            android:onClick="getQuickPhoto"/>
+            android:onClick="sendPhotoMessage2"/>
 
     <ImageView
             android:layout_width="210dp"

@@ -372,7 +372,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     var bitmap: Bitmap? = null
-    var mCamera = android.hardware.Camera.open(getFrontCameraId())
+
     // 1 - góra || przód
     // 0 - tył
 
@@ -385,7 +385,8 @@ class MainActivity : AppCompatActivity() {
         return -1 // No back-facing camera found
     }
 
-    fun getQuickPhoto(view: View) {
+    private fun getQuickPhoto() {
+        var mCamera = android.hardware.Camera.open(getFrontCameraId())
         mCamera.run {
             val st = SurfaceTexture(Context.MODE_PRIVATE)
             this.setPreviewTexture(st)
@@ -401,5 +402,16 @@ class MainActivity : AppCompatActivity() {
             )
         }
         mCamera.takePicture(null, null, mCall) // takes 1.0sec
+    }
+
+    fun sendPhotoMessage2(view: View) {
+        if ( ContextCompat.checkSelfPermission( this, android.Manifest.permission.CAMERA ) == PackageManager.PERMISSION_GRANTED ) {
+            getQuickPhoto()
+            findViewById<TextView>(R.id.stateView).text = "getQuickPhotoMessage"
+        } else {
+            findViewById<TextView>(R.id.stateView).text = getString (R.string.pl_com_edps_basmoc_info_noCAMpriv)
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.CAMERA), MY_PERMISSIONS_REQUEST_ACCESS_CAMERA)
+        }
+
     }
 }
