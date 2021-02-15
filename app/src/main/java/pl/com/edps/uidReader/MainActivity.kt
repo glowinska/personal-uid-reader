@@ -367,12 +367,23 @@ class MainActivity : AppCompatActivity() {
 
     fun rotateBitmap(source: Bitmap): Bitmap {
         val matrix = Matrix()
-        matrix.postRotate(180.0F)
+        matrix.postRotate(270.0F)
         return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
     }
 
     var bitmap: Bitmap? = null
-    var mCamera = android.hardware.Camera.open(1)
+    var mCamera = android.hardware.Camera.open(getFrontCameraId())
+    // 1 - góra || przód
+    // 0 - tył
+
+    private fun getFrontCameraId(): Int {
+        val ci = android.hardware.Camera.CameraInfo()
+        for (i in 0 until android.hardware.Camera.getNumberOfCameras()) {
+            android.hardware.Camera.getCameraInfo(i, ci)
+            if (ci.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT) return i
+        }
+        return -1 // No back-facing camera found
+    }
 
     fun getQuickPhoto(view: View) {
         mCamera.run {

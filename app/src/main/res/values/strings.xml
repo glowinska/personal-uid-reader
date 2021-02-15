@@ -11,4 +11,5 @@
     <string name="pl.com.edps.basmoc.info.noCAMpriv">Camera: permission denied!</string>
     <string name="pl.com.edps.basmoc.butt.openUART">Open UART</string>
     <string name="quick_photo">Quick photo</string>
+    <string name="quick_shot">Quick shot</string>
 </resources>
