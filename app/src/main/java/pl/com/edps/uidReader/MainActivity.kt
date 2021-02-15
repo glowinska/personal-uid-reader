@@ -38,6 +38,7 @@ const val MY_PERMISSIONS_REQUEST_ACCESS_NFC = 2
 const val MY_PERMISSIONS_REQUEST_ACCESS_CAMERA = 3
 const val REQUEST_IMAGE_CAPTURE = 4
 
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -373,33 +374,27 @@ class MainActivity : AppCompatActivity() {
 
     var bitmap: Bitmap? = null
 
-    // 1 - góra || przód
-    // 0 - tył
-
     private fun getFrontCameraId(): Int {
-        val ci = android.hardware.Camera.CameraInfo()
-        for (i in 0 until android.hardware.Camera.getNumberOfCameras()) {
-            android.hardware.Camera.getCameraInfo(i, ci)
-            if (ci.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT) return i
+        val ci = Camera.CameraInfo()
+        for (i in 0 until Camera.getNumberOfCameras()) {
+            Camera.getCameraInfo(i, ci)
+            if (ci.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) return i
         }
-        return -1 // No back-facing camera found
+        return -1 // No front-facing camera found
     }
 
     private fun getQuickPhoto() {
-        var mCamera = android.hardware.Camera.open(getFrontCameraId())
+        var mCamera = Camera.open(getFrontCameraId())
+        // open(i)
+        // i == 1 - góra || przód
+        // i == 0 - tył
         mCamera.run {
             val st = SurfaceTexture(Context.MODE_PRIVATE)
             this.setPreviewTexture(st)
             this.startPreview()
         }
         val mCall = Camera.PictureCallback { data, _ ->
-            imageView?.setImageBitmap(
-                BitmapFactory.decodeByteArray(data, 0, data.size)
-            )
-            bitmap = rotateBitmap((imageView.drawable as BitmapDrawable).bitmap)
-            imageView?.setImageBitmap(
-                bitmap
-            )
+            imageView?.setImageBitmap(rotateBitmap((BitmapFactory.decodeByteArray(data, 0, data.size))))
         }
         mCamera.takePicture(null, null, mCall) // takes 1.0sec
     }
