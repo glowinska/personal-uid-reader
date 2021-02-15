@@ -7,6 +7,11 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.graphics.SurfaceTexture
+import android.graphics.drawable.BitmapDrawable
+import android.hardware.Camera
 import android.location.Location
 import android.nfc.NfcAdapter
 import android.nfc.Tag
@@ -234,6 +239,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun emuLegic(view: View){
+        findViewById<TextView>(R.id.stateView).text = "Legic: "
     }
 
     fun readUID(view: View){
@@ -357,5 +363,32 @@ class MainActivity : AppCompatActivity() {
             str += "\""
             return str
         }
+    }
+
+    fun rotateBitmap(source: Bitmap): Bitmap {
+        val matrix = Matrix()
+        matrix.postRotate(180.0F)
+        return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
+    }
+
+    var bitmap: Bitmap? = null
+    var mCamera = android.hardware.Camera.open(1)
+
+    fun getQuickPhoto(view: View) {
+        mCamera.run {
+            val st = SurfaceTexture(Context.MODE_PRIVATE)
+            this.setPreviewTexture(st)
+            this.startPreview()
+        }
+        val mCall = Camera.PictureCallback { data, _ ->
+            imageView?.setImageBitmap(
+                BitmapFactory.decodeByteArray(data, 0, data.size)
+            )
+            bitmap = rotateBitmap((imageView.drawable as BitmapDrawable).bitmap)
+            imageView?.setImageBitmap(
+                bitmap
+            )
+        }
+        mCamera.takePicture(null, null, mCall) // takes 1.0sec
     }
 }
