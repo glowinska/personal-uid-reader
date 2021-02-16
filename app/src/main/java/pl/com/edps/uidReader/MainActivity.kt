@@ -1,3 +1,8 @@
+@file:Suppress("DEPRECATION", "NAME_SHADOWING", "SetTextI18n",
+    "RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS",
+    "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "UNUSED_PARAMETER"
+)
+
 package pl.com.edps.uidReader
 
 import android.app.PendingIntent
@@ -10,13 +15,11 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.graphics.SurfaceTexture
-import android.graphics.drawable.BitmapDrawable
 import android.hardware.Camera
 import android.location.Location
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Bundle
-import android.os.PowerManager
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
@@ -29,46 +32,24 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.magicrf.uhfreaderlib.reader.UhfReader
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
 import kotlin.math.absoluteValue
-
 
 const val MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
 const val MY_PERMISSIONS_REQUEST_ACCESS_NFC = 2
 const val MY_PERMISSIONS_REQUEST_ACCESS_CAMERA = 3
 const val REQUEST_IMAGE_CAPTURE = 4
 
-@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var nfcAdapter: NfcAdapter
     private lateinit var pendingIntent: PendingIntent
-
-    private var listEPC: ArrayList<EPC>? = null
-    private var listMap: ArrayList<Map<String, Any>>? =
-        null
-    private val runFlag = true
-    private val startFlag = false
     private var serialPortPath = "/dev/ttyS2"
     private var reader
             : UhfReader? = null
     private var readerDevice
             : UhfReaderDevice? = null
-    private var mWakeLock: PowerManager.WakeLock? = null
-
     private var screenReceiver: ScreenStateReceiver? = null
-
-    class EPC {
-
-        var id = 0
-        var epc: String? = null
-        var count = 0
-
-        override fun toString(): String {
-            return "EPC [id=$id, epc=$epc, count=$count]"
-        }
-    }
 
     class ScreenStateReceiver : BroadcastReceiver() {
         private var reader: UhfReader? = null
@@ -82,16 +63,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     class UhfReaderDevice {
-        fun powerOn() {
-
-        }
-
-        fun powerOff() {
-            if (devPower != null) {
-
-                devPower = null
-            }
-        }
 
         companion object {
             private var readerDevice: UhfReaderDevice? = null
@@ -119,9 +90,6 @@ class MainActivity : AppCompatActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
 
-        if(nfcAdapter == null)
-            findViewById<TextView>(R.id.nfcView).text = "!! NULL !!"
-
         pendingIntent = PendingIntent.getActivity(
             this,
             0,
@@ -134,7 +102,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if(nfcAdapter != null && nfcAdapter.isEnabled) {
+        if(nfcAdapter.isEnabled) {
             nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null)
         }
     }
@@ -142,7 +110,7 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
 
-        if(nfcAdapter != null && nfcAdapter.isEnabled) {
+        if(nfcAdapter.isEnabled) {
             nfcAdapter.disableForegroundDispatch(this)
         }
     }
@@ -184,17 +152,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private val HEX_CHARS = "0123456789ABCDEF".toCharArray()
+    private val chars = "0123456789ABCDEF".toCharArray()
 
-    fun ByteArray.toHex() : String {
+    private fun ByteArray.toHex() : String {
         val result = StringBuffer()
 
         forEach {
             val octet = it.toInt()
             val firstIndex = (octet and 0xF0).ushr(4)
             val secondIndex = octet and 0x0F
-            result.append(HEX_CHARS[firstIndex])
-            result.append(HEX_CHARS[secondIndex])
+            result.append(chars[firstIndex])
+            result.append(chars[secondIndex])
         }
 
         return result.toString()
@@ -245,14 +213,13 @@ class MainActivity : AppCompatActivity() {
 
     fun readUID(view: View){
         Thread.sleep(1)
-        val ser = reader!!.portPath
         findViewById<TextView>(R.id.stateView).text = "UID: "
     }
 
     fun sendGPSmessage(view: View) {
         if ( ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED ) {
             fusedLocationClient.lastLocation.addOnSuccessListener { location : Location? ->
-                val loc = if (location != null) location else Location("")
+                val loc = location ?: Location("")
                 findViewById<TextView>(R.id.gpcoView).text = LocationConverter.latitudeAsDMS(loc.latitude,9).plus(" ").plus(LocationConverter.longitudeAsDMS(loc.longitude, 9))
             }
         } else {
@@ -366,13 +333,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun rotateBitmap(source: Bitmap): Bitmap {
+    private fun rotateBitmap(source: Bitmap): Bitmap {
         val matrix = Matrix()
         matrix.postRotate(270.0F)
         return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
     }
-
-    var bitmap: Bitmap? = null
 
     private fun getFrontCameraId(): Int {
         val ci = Camera.CameraInfo()
@@ -384,7 +349,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getQuickPhoto() {
-        var mCamera = Camera.open(getFrontCameraId())
+        val mCamera = Camera.open(getFrontCameraId())
         // open(i)
         // i == 1 - góra || przód
         // i == 0 - tył
