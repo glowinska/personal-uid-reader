@@ -12,4 +12,10 @@
     <string name="pl.com.edps.basmoc.butt.openUART">Open UART</string>
     <string name="quick_photo">Quick photo</string>
     <string name="quick_shot">Quick shot</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Password</string>
+    <string name="hint__confirm_password">Confirm Password</string>
+    <string name="label_login_btn">Login</string>
+    <string name="label_signup_btn">SignUp</string>
+    <string name="label_create_user_btn">Create User</string>
 </resources>

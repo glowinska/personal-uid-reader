@@ -32,6 +32,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.magicrf.uhfreaderlib.reader.UhfReader
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.Reader
 import kotlin.math.absoluteValue
 
 const val MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
@@ -374,4 +375,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+
 }

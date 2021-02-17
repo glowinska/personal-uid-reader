@@ -105,4 +105,6 @@
             app:layout_constraintEnd_toStartOf="@+id/readUID"
             app:layout_constraintRight_toLeftOf="@+id/readUID"
             app:layout_constraintTop_toBottomOf="@+id/openUART" />
+
+
 </android.support.constraint.ConstraintLayout>
