@@ -12,10 +12,10 @@ import android.widget.EditText
 
 class SignUpActivity : AppCompatActivity() {
 
-    private var edUsername = EditText(this)
-    private var edPassword = EditText(this)
-    private var edConfirmPassword = EditText(this)
-    private var btnCreateUser = Button(this)
+//    private var edUsername = EditText(this)
+//    private var edPassword = EditText(this)
+//    private var edConfirmPassword = EditText(this)
+//    private var btnCreateUser = Button(this)
 
 
     @SuppressLint("CommitPrefEdits")
@@ -23,10 +23,10 @@ class SignUpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
 
-        edUsername = findViewById(R.id.ed_username)
-        edPassword = findViewById(R.id.ed_password)
-        edConfirmPassword = findViewById(R.id.ed_confirm_password)
-        btnCreateUser = findViewById(R.id.btn_create_user)
+        var edUsername = findViewById<EditText>(R.id.ed_username)
+        var edPassword = findViewById<EditText>(R.id.ed_password)
+        var edConfirmPassword = findViewById<EditText>(R.id.ed_confirm_password)
+        var btnCreateUser = findViewById<Button>(R.id.btn_create_user)
 
         btnCreateUser.setOnClickListener {
 
@@ -43,9 +43,9 @@ class SignUpActivity : AppCompatActivity() {
 
                 this.finish()
             }
-            val intent = Intent(this@SignUpActivity, LoginActivity::class.java)
-            intent.putExtra("key", "Kotlin")
-            startActivity(intent)
+//            val intent = Intent(this@SignUpActivity, LoginActivity::class.java)
+//            intent.putExtra("key", "Kotlin")
+//            startActivity(intent)
         }
     }
 }
